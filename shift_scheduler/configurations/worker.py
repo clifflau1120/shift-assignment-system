@@ -14,7 +14,11 @@ class WorkerPreferences(BaseModel):
     """Whether this worker is a full-time healthcare assistant."""
 
     accept_pa_shifts: bool = False
-    """Whether this worker accepts a morning shift after an afternoon shift."""
+    """
+    Whether this worker accepts a morning shift after an afternoon shift.
+
+    Even this flag is set, such a shift arrangement is still depriortized.
+    """
 
     carryovers: int = 0
     """
