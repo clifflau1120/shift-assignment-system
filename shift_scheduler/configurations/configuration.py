@@ -2,6 +2,7 @@
 
 import functools
 from datetime import date
+import typing
 
 from pydantic import BaseModel, model_validator, Field
 
@@ -22,6 +23,13 @@ class Configuration(BaseModel, frozen=True):
 
     total_working_hours: int = Field(ge=min(constants.WORKING_HOURS.values()))
     """The total working hours required for every full-time worker."""
+
+    sat_parameters: dict[str, typing.Any] = Field(default_factory=dict)
+    """
+    Configures the optimization parameters of `cp_model.CpSolver`.
+
+    Reference: https://github.com/google/or-tools/blob/stable/ortools/sat/sat_parameters.proto
+    """
 
     io: IoConfiguration
     """Configures the I/O of the application."""

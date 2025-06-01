@@ -7,7 +7,7 @@ from ortools.sat import cp_model_pb2
 from ortools.sat.python import cp_model
 
 from shift_scheduler import configurations
-from shift_scheduler.schedules import variables
+from shift_scheduler.schedules import variables, exceptions
 from shift_scheduler.schedules.constraints import base as base_constraint
 
 
@@ -32,6 +32,8 @@ class ShiftManager:
             self._model,
             self._config,
         )
+
+        self._set_solver_parameters()
 
     @property
     def config(self) -> configurations.Configuration:
@@ -86,3 +88,12 @@ class ShiftManager:
 
         self._model.minimize(penalties)  # pyright: ignore
         return self._solver.solve(self._model)
+
+    def _set_solver_parameters(self):
+        """Use the configuration object to set solver parameters."""
+
+        for key, value in self._config.sat_parameters.items():
+            try:
+                setattr(self._solver.parameters, key, value)
+            except AttributeError as cause:
+                raise exceptions.SatParameterError(key) from cause
