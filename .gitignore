@@ -197,3 +197,6 @@ outputs/
 # Configurations
 configurations/*
 !configurations/.keep
+
+# Annoying Mac OS garbage
+**/.DS_Store
