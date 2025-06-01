@@ -1,0 +1,5 @@
+holidays~=0.73
+more-itertools~=10.7.0
+ortools~=9.12.4544
+pydantic~=2.11.5
+typer~=0.16.0

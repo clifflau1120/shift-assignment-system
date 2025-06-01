@@ -1,0 +1,40 @@
+"""Module of `WorkerConfiguration`."""
+
+from datetime import date
+
+from pydantic import BaseModel, Field, field_validator
+
+from shift_scheduler.schedules import types
+
+
+class WorkerPreferences(BaseModel):
+    """Configuration of a worker."""
+
+    is_full_time: bool
+    """Whether this worker is a full-time healthcare assistant."""
+
+    accept_pa_shifts: bool = False
+    """Whether this worker accepts a morning shift after an afternoon shift."""
+
+    carryovers: int = 0
+    """
+    The number of public holiday carryovers
+    from the previous schedule or to the next schedule.
+    """
+
+    requests: dict[types.Shift, set[date]] = Field(default_factory=dict)
+    """The requested shifts of the worker."""
+
+    @field_validator("requests", mode="after")
+    @classmethod
+    def _ensure_at_most_one_birthday_leave(
+        cls, requests: dict[types.Shift, set[date]]
+    ) -> dict[types.Shift, set[date]]:
+        """Ensures that birthday leave cannot be set to multiple dates."""
+
+        birthday_leaves = requests.get(types.Shift.BIRTHDAY_LEAVE) or set()
+
+        if len(birthday_leaves) > 1:
+            raise ValueError("Birthday leave cannot be set to multiple dates.")
+
+        return requests

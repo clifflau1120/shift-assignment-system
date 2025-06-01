@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "shift-scheduler"
+description = "An application that assigns shifts to workers."
+dynamic = ["dependencies", "optional-dependencies", "version"]
+requires-python = ">= 3.10"
+readme = "README.md"
+license-files = ["LICENSE"]
+authors = [{ name = "Cliff Lau", email = "cliff@clifflau.hk" }]
+classifiers = ["Private :: Do Not Upload"]
+
+[project.scripts]
+shift-scheduler = "shift_scheduler.cli.app:app"
+
+[tool.ruff]
+line-length = 100
+
+[tool.pyright]
+exclude = ["**/__pycache__", "**/.*"]
+
+[tool.setuptools.packages.find]
+exclude = ["tests"]
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+optional-dependencies.dev = { file = ["requirements-dev.txt"] }
+version = { attr = "shift_scheduler.version.__version__" }
