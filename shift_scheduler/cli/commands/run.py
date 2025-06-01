@@ -31,6 +31,7 @@ def run(
     ],
 ):
     config = configurations.Configuration.model_validate_json(config_file_path.read_bytes())
+    print(f"Loaded configurations: {config_file_path}")
 
     shift_manager = manager.ShiftManager(config)
 
@@ -54,6 +55,8 @@ def run(
         .add_constraint_module(constraints.AfterAfternoonShiftsConstraint, penalty_per_unit=3)
         .add_constraint_module(constraints.AfterNightShiftsConstraint)
     )
+
+    print("Started to solve for the optimal schedule.")
 
     # Solve the model
     match shift_manager.solve():
