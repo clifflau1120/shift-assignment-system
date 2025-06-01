@@ -2,6 +2,7 @@
 
 import typing
 
+import typing_extensions
 from ortools.sat import cp_model_pb2
 from ortools.sat.python import cp_model
 
@@ -61,7 +62,7 @@ class ShiftManager:
         constraint_cls: type[base_constraint.ShiftAssignmentConstraint],
         *,
         penalty_per_unit: int = 1,
-    ) -> typing.Self:
+    ) -> typing_extensions.Self:
         """Add a shift assignment constraint to the scheduler."""
 
         constraint = constraint_cls(

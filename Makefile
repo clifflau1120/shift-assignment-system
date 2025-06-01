@@ -2,7 +2,7 @@ OS = $(shell uname -s)
 
 PACKAGE_NAME=shift-scheduler
 MODULE_NAME=shift_scheduler
-PYTHON_VERSION=3.12.8
+PYTHON_VERSION=3.10
 
 
 .PHONY: pyenv
@@ -30,6 +30,7 @@ endif
 .PHONY: virtualenv-delete
 virtualenv-delete: python
 	pyenv virtualenv-delete -f ${PACKAGE_NAME}
+	rm -f .python-version
 
 
 requirements.txt: requirements.in

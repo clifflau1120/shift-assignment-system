@@ -8,7 +8,7 @@ from shift_scheduler.schedules import variables
 
 NO_PENALTY = 0
 
-type PenaltyExpression = cp_model.ObjLinearExprT
+PenaltyExpression = cp_model.ObjLinearExprT
 """A linear expression that represents the penalty incurred for soft constraint violation."""
 
 

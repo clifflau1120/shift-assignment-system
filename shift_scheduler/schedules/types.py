@@ -4,7 +4,7 @@ import enum
 import typing
 from datetime import date
 
-type WorkerName = str
+WorkerName = str
 
 
 class Shift(str, enum.Enum):
