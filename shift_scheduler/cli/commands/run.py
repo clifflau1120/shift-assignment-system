@@ -61,7 +61,7 @@ def run(
     # Solve the model
     match shift_manager.solve():
         case cp_model_pb2.OPTIMAL | cp_model_pb2.FEASIBLE:
-            print("Found a schedule that meets all the constraints")
+            print("Found a schedule that meets all the constraints.")
 
             file_path = file_utils.prepare_file_path(shift_manager.config)
 
@@ -74,7 +74,7 @@ def run(
             file_utils.write_solution(rows, file_path)
 
             print(
-                f"Written the schedule to {file_path}.",
+                f"Wrote the schedule to: {file_path}",
             )
         case cp_model_pb2.INFEASIBLE:
             print("Failed to find a schedule that meets all the constraints.")
