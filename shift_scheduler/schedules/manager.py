@@ -7,7 +7,7 @@ from ortools.sat import cp_model_pb2
 from ortools.sat.python import cp_model
 
 from shift_scheduler import configurations
-from shift_scheduler.schedules import variables, exceptions
+from shift_scheduler.schedules import exceptions, variables
 from shift_scheduler.schedules.constraints import base as base_constraint
 
 

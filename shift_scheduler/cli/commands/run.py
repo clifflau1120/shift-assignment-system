@@ -73,9 +73,7 @@ def run(
 
             file_utils.write_solution(rows, file_path)
 
-            print(
-                f"Wrote the schedule to: {file_path}",
-            )
+            print(f"Wrote the schedule to: {file_path}")
         case cp_model_pb2.INFEASIBLE:
             print("Failed to find a schedule that meets all the constraints.")
         case cp_model_pb2.MODEL_INVALID:

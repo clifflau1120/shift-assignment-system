@@ -1,14 +1,14 @@
 """Module of configurations."""
 
 import functools
-from datetime import date
 import typing
+from datetime import date
 
-from pydantic import BaseModel, model_validator, Field
+from pydantic import BaseModel, Field, model_validator
 
 from shift_scheduler.configurations.io import IoConfiguration
 from shift_scheduler.configurations.worker import WorkerPreferences
-from shift_scheduler.schedules import types, constants
+from shift_scheduler.schedules import constants, types
 from shift_scheduler.utils import datetime_utils
 
 
