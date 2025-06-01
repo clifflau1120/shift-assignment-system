@@ -50,8 +50,5 @@ WORKING_HOURS = {
 }
 """A map of shift types to working hours."""
 
-TOTAL_WORKING_HOURS = 270
-"""The number of working hours required for a full-time worker."""
-
 WORKING_HOURS_FOR_SEVEN_CONSECUTIVE_ANNUAL_LEAVES = 44
 """A special number of working hours equivalent to every 7 consecutive annual leaves."""

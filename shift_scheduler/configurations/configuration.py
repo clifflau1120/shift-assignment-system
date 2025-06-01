@@ -3,11 +3,11 @@
 import functools
 from datetime import date
 
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel, model_validator, Field
 
 from shift_scheduler.configurations.io import IoConfiguration
 from shift_scheduler.configurations.worker import WorkerPreferences
-from shift_scheduler.schedules import types
+from shift_scheduler.schedules import types, constants
 from shift_scheduler.utils import datetime_utils
 
 
@@ -19,6 +19,9 @@ class Configuration(BaseModel, frozen=True):
 
     end_date: date
     """The end date of the shift schedule."""
+
+    total_working_hours: int = Field(ge=min(constants.WORKING_HOURS.values()))
+    """The total working hours required for every full-time worker."""
 
     io: IoConfiguration
     """Configures the I/O of the application."""

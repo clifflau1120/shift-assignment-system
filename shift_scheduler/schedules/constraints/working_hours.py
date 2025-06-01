@@ -25,7 +25,7 @@ class WorkingHoursConstraint(base.ShiftAssignmentConstraint):
             annual_leaves = self._config.workers[worker].requests.get(types.Shift.ANNUAL_LEAVE, [])
             working_hours += self._get_working_hour_adjustment(annual_leaves)
 
-            self._model.add(working_hours == constants.TOTAL_WORKING_HOURS)
+            self._model.add(working_hours == self._config.total_working_hours)
 
     @staticmethod
     def _get_working_hour_adjustment(annual_leaves: typing.Iterable[date]) -> int:
