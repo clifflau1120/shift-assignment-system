@@ -79,7 +79,7 @@ class Shift(str, enum.Enum):
     def all_working_shifts(cls) -> set["Shift"]:
         """A set of all working shifts."""
 
-        return cls.regular_working_shifts() & cls.special_working_shifts()
+        return cls.regular_working_shifts() | cls.special_working_shifts()
 
     @classmethod
     def all_resting_shifts(cls) -> set["Shift"]:
