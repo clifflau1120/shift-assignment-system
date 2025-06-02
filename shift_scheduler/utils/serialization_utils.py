@@ -12,7 +12,7 @@ TAG_REQUEST = "R"
 TAG_FULL_TIME = "SA"
 TAG_PART_TIME = "替假SA"
 
-FULL_DATE_FORMAT = "%m/%d/%Y"
+FULL_DATE_FORMAT = "%-m/%-d/%Y"
 WEEKDAY_TRANSLATIONS = ["一", "二", "三", "四", "五", "六", "日"]
 
 
