@@ -28,7 +28,7 @@ class MorningShiftConstraint(base.ShiftAssignmentConstraint):
             self._model.add(total_workers_in_the_morning <= constants.MAX_WORKERS_IN_THE_MORNING)
 
     def create_soft_constraints(self) -> base.PenaltyExpression:
-        penalties: list[base.PenaltyExpression] = []
+        penalty: base.PenaltyExpression = 0
 
         for scheduled_date in self._config.period:
             shift_assignments_in_the_morning = [
@@ -39,13 +39,11 @@ class MorningShiftConstraint(base.ShiftAssignmentConstraint):
                 )
             ]
 
-            penalties.append(
-                utils.create_soft_constraint(
-                    model=self._model,
-                    events=shift_assignments_in_the_morning,
-                    soft_min=constants.MAX_WORKERS_IN_THE_MORNING,
-                    penalty_per_unit=self._penalty_per_unit,
-                )
+            penalty += utils.create_soft_constraint(  # pyright: ignore
+                model=self._model,
+                events=shift_assignments_in_the_morning,
+                soft_min=constants.MAX_WORKERS_IN_THE_MORNING,
+                penalty_per_unit=self._penalty_per_unit,
             )
 
-        return sum(penalties)
+        return penalty

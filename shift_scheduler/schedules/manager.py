@@ -80,7 +80,7 @@ class ShiftManager:
     def solve(self) -> cp_model_pb2.CpSolverStatus:
         """Solve the scheduling problem."""
 
-        penalties = base_constraint.PenaltyExpression = 0
+        penalties = base_constraint.PenaltyExpression = 0.0
 
         for constraint in self._constraints:
             constraint.add_hard_constraints()
