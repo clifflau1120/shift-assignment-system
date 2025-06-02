@@ -7,6 +7,8 @@ from shift_scheduler.version import __version__
 app = typer.Typer()
 
 
-@app.command(help="Display the version of shift-scheduler.")
+@app.command()
 def version():
+    """Show the version of shift-scheduler."""
+
     print(__version__)
