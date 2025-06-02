@@ -1,21 +1,23 @@
 """Module of the `run` command."""
 
+import logging
 import pathlib
 
 import typer
 import typing_extensions
 from ortools.sat import cp_model_pb2
-from rich import print
 
 from shift_scheduler import configurations
 from shift_scheduler.schedules import constraints, manager
 from shift_scheduler.utils import file_utils, serialization_utils
 
 app = typer.Typer()
+logger = logging.getLogger(__name__)
 
 
-@app.command(help="Generate a shift schedule.")
+@app.command()
 def run(
+    ctx: typer.Context,
     config_file_path: typing_extensions.Annotated[
         pathlib.Path,
         typer.Option(
@@ -30,8 +32,10 @@ def run(
         ),
     ],
 ):
+    """Generate a shift schedule with respect to the configured constraints."""
+
     config = configurations.Configuration.model_validate_json(config_file_path.read_bytes())
-    print(f"Loaded configurations: {config_file_path}")
+    logger.info("Loaded configurations: %s", config_file_path)
 
     shift_manager = manager.ShiftManager(config)
 
@@ -56,12 +60,12 @@ def run(
         .add_constraint_module(constraints.AfterNightShiftsConstraint)
     )
 
-    print("Started to solve for the optimal schedule.")
+    logger.info("Started to solve for the optimal schedule.")
 
     # Solve the model
     match shift_manager.solve():
         case cp_model_pb2.OPTIMAL | cp_model_pb2.FEASIBLE:
-            print("Found a schedule that meets all the constraints.")
+            logger.info("Found a schedule that meets all the constraints.")
 
             file_path = file_utils.prepare_file_path(shift_manager.config)
 
@@ -73,10 +77,11 @@ def run(
 
             file_utils.write_solution(rows, file_path)
 
-            print(f"Wrote the schedule to: {file_path}")
+            logger.debug("Objective value: %f", shift_manager.solver.objective_value)
+            logger.info("Wrote the schedule to: %s", file_path)
         case cp_model_pb2.INFEASIBLE:
-            print("Failed to find a schedule that meets all the constraints.")
+            logger.info("Failed to find a schedule that meets all the constraints.")
         case cp_model_pb2.MODEL_INVALID:
-            print("Failed to set up the constraint programming model.")
+            logger.critical("Failed to set up the constraint programming model.")
         case cp_model_pb2.UNKNOWN:
-            print("Failed to find a schedule within maximum search depth.")
+            logger.warning("Failed to find a schedule within maximum search depth.")
