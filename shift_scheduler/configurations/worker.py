@@ -21,6 +21,9 @@ class WorkerPreferences(BaseModel):
     Even this flag is set, such a shift arrangement is still depriortized.
     """
 
+    total_time_offs_override: int | None = None
+    """An override of the total number of required time-offs."""
+
     carryovers: int = 0
     """
     The number of public holiday carryovers
