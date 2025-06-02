@@ -10,13 +10,17 @@ from shift_scheduler.schedules.constraints import base
 
 class ConsecutiveNightShiftsConstraint(base.ShiftAssignmentConstraint):
     """
-    A `ShiftAssignmentConstraint` that represents:
+    A `ShiftAssignmentConstraint` that:
 
-    - Hard constraint: ensures at most a certain number of consecutive night shifts
-    - Soft constraint: penalizes conescutive night shifts without two time-offs
+    1. Limits the number of consecutive night shifts
+    2. Ensures consecutive night shifts are followed by at least two days of rest
     """
 
     def add_hard_constraints(self) -> None:
+        self._limit_consecutive_night_shifts()
+        self._ensure_consecutive_night_shifts_are_followed_by_two_days_of_rest()
+
+    def _limit_consecutive_night_shifts(self) -> None:
         for worker, consecutive_dates in itertools.product(
             self._config.all_workers,
             more_itertools.sliding_window(
@@ -31,17 +35,15 @@ class ConsecutiveNightShiftsConstraint(base.ShiftAssignmentConstraint):
 
             self._model.add(total_night_shifts <= constants.MAX_CONSECUTIVE_NIGHT_SHIFTS)
 
-    def create_soft_constraints(self) -> base.PenaltyExpression:
-        penalty: base.PenaltyExpression = 0
-
+    def _ensure_consecutive_night_shifts_are_followed_by_two_days_of_rest(self) -> None:
         for worker, (day_1, day_2, day_3, day_4) in itertools.product(
-            self._config.all_workers,
+            self._config.full_time_workers,
             more_itertools.sliding_window(self._config.period, 4),
         ):
-            total_night_shifts = sum(
-                self._shift_assignments.get(worker, types.Shift.NIGHT, day_1)
-                for day in (day_1, day_2)
-            )
+            consecutive_night_shifts = [
+                self._shift_assignments.get(worker, types.Shift.NIGHT, day_1),
+                self._shift_assignments.get(worker, types.Shift.NIGHT, day_2),
+            ]
 
             total_rests = sum(
                 self._shift_assignments.get(worker, shift, day)
@@ -50,17 +52,4 @@ class ConsecutiveNightShiftsConstraint(base.ShiftAssignmentConstraint):
                 )
             )
 
-            has_two_night_shifts = self._model.new_bool_var("")
-            self._model.add(total_night_shifts >= 2).only_enforce_if(has_two_night_shifts)
-
-            has_two_rests = self._model.new_bool_var("")
-            self._model.add(total_rests >= 2).only_enforce_if(has_two_rests)
-
-            should_penalize = self._model.new_bool_var("")
-            self._model.add_bool_and([has_two_night_shifts, ~has_two_rests]).only_enforce_if(
-                should_penalize
-            )
-
-            penalty += should_penalize * self._penalty_per_unit
-
-        return penalty
+            self._model.add(total_rests == 2).only_enforce_if(*consecutive_night_shifts)

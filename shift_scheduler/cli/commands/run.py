@@ -41,22 +41,22 @@ def run(
 
     (
         shift_manager.add_constraint_module(constraints.DailyAssignmentConstraint)
-        .add_constraint_module(constraints.PartTimeAssignmentConstraint, penalty_per_unit=20)
-        .add_constraint_module(constraints.MorningShiftConstraint, penalty_per_unit=90)
-        .add_constraint_module(constraints.AfternoonShiftConstraint, penalty_per_unit=90)
+        .add_constraint_module(constraints.PartTimeAssignmentConstraint, penalty_per_unit=1)  # 7
+        .add_constraint_module(constraints.AfternoonShiftConstraint, penalty_per_unit=5)  # 0
+        .add_constraint_module(constraints.MorningShiftConstraint, penalty_per_unit=5)  # 0
         .add_constraint_module(constraints.NightShiftConstraint)
         .add_constraint_module(constraints.TimeOffConstraint)
         .add_constraint_module(constraints.AnnualLeavesConstraint)
         .add_constraint_module(constraints.BirthdayLeaveConstraint)
         .add_constraint_module(constraints.PublicHolidaysConstraint)
         .add_constraint_module(constraints.RequestedShiftsConstraint)
-        .add_constraint_module(constraints.SpecialWorkingShiftConstraint, penalty_per_unit=10)
+        .add_constraint_module(constraints.SpecialWorkingShiftConstraint, penalty_per_unit=2)  # 8
         .add_constraint_module(constraints.WorkingHoursConstraint)
         .add_constraint_module(constraints.ConsecutiveWorkingDaysConstraint)
         .add_constraint_module(constraints.ConsecutiveApShiftsConstraint)
-        .add_constraint_module(constraints.ConsecutiveNightShiftsConstraint, penalty_per_unit=50)
+        .add_constraint_module(constraints.ConsecutiveNightShiftsConstraint, penalty_per_unit=4)
         .add_constraint_module(constraints.ConsecutiveTimeOffsConstraint)
-        .add_constraint_module(constraints.AfterAfternoonShiftsConstraint, penalty_per_unit=30)
+        .add_constraint_module(constraints.AfterAfternoonShiftsConstraint, penalty_per_unit=3)  # 9
         .add_constraint_module(constraints.AfterNightShiftsConstraint)
     )
 
